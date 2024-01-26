@@ -14,6 +14,17 @@ class PostListSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('id', 'title', 'body', 'owner', 'category', 'preview', 'price', 'currency', 'created_at', 'updated_at', 'owner_username', 'category_name')
 
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['likes_count'] = instance.likes.count()
+        user = self.context['request'].user
+        if user.is_authenticated:
+            repr['is_liked'] = user.likes.filter(post=instance).exists()
+        return repr
+
+
+
+
 
 class PostImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,9 +62,14 @@ class PostDetailSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         repr = super().to_representation(instance)
         repr['comments_count'] = instance.comments.count()
-        repr['comments'] = CommentSerializer(
-            instance=instance.comments.all(), many=True).data
+        repr['comments'] = CommentSerializer(instance=instance.comments.all(), many=True).data
+        repr = super().to_representation(instance)
+        repr['likes_count'] = instance.likes.count()
+        user = self.context['request'].user
+        if user.is_authenticated:
+            repr['is_liked'] = user.likes.filter(post=instance).exists()
         return repr
+
 
 
 

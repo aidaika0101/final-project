@@ -48,8 +48,7 @@ urlpatterns = [
     path('api/v1/categories/', include('category.urls')),
     path('api/v1/posts/', include('post.urls')),
     path('api/v1/comments/', include('comment.urls')),
-    # path('cart/', shopping_cart, name='shopping_cart' ),
-    # path('order_confirmation/', order_confirmation, name='order_confirmation'),
+    path('api/v1/likes/', include('like.urls')),
 
 
 
@@ -62,3 +61,4 @@ urlpatterns += static(
 
 
 )
+
